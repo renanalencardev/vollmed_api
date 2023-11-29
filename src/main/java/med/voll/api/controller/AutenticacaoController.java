@@ -23,7 +23,9 @@ public class AutenticacaoController {
     private TokenService tokenService;
     @PostMapping
     public ResponseEntity efetuarLogin(@RequestBody @Valid DadosAutenticacao dados){
+        //Cria o "DTO" do spring security
         var authenticationToken = new UsernamePasswordAuthenticationToken(dados.login(), dados.senha());
+        //devolve o usuário autenticado no sistema
         var authentication = manager.authenticate(authenticationToken);
 
         var tokenJWT = tokenService.gerarToken((Usuario) authentication.getPrincipal());

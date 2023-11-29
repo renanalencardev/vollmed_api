@@ -1,0 +1,1 @@
+alter table medicos modify column nome varchar(110);
