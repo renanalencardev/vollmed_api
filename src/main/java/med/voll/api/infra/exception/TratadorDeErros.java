@@ -1,11 +1,16 @@
 package med.voll.api.infra.exception;
 
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.http.HttpMessage;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.client.ResourceAccessException;
 
 @RestControllerAdvice
 public class TratadorDeErros {
@@ -20,6 +25,15 @@ public class TratadorDeErros {
         var erros = exception.getFieldErrors();
 
         return ResponseEntity.badRequest().body(erros.stream().map(DadosErrosValidacao::new).toList());
+    }
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity tratarErroAuthentication() {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Falha na autenticação");
+    }
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity tratarErroAcessoNegado(AccessDeniedException exception) {
+        var erros = exception.toString();
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Acesso negado: ");
     }
     private record DadosErrosValidacao(String field, String message){
         public DadosErrosValidacao(FieldError erro){
