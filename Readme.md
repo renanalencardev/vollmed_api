@@ -1,4 +1,4 @@
-# Projeto Backend Spring Boot para API REST de Cadastro Médico
+# Projeto Backend Spring Boot para API REST de uma Clínica Médica.
 
 Este é um projeto backend desenvolvido em Spring Boot, uma estrutura robusta para aplicações Java, que oferece suporte para a criação de APIs REST eficientes. Neste projeto, focamos no cadastro de médicos, pacientes e consultas, utilizando as melhores práticas de desenvolvimento.
 
