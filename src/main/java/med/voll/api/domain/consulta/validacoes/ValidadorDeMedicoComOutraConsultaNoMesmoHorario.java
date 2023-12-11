@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 public class ValidadorDeMedicoComOutraConsultaNoMesmoHorario implements ValidadorAgendamentoDeConsulta {
     @Autowired
     private ConsultaRepository consultaRepository;
-
     public void validar(DadosAgendamentoConsulta dados){
         var medicoPossuiOutraConsultaNoMesmoHorario = consultaRepository.existsByMedicoIdAndData(dados.idMedico(), dados.data());
         if(medicoPossuiOutraConsultaNoMesmoHorario){
