@@ -1,18 +1,13 @@
 package med.voll.api.domain.consulta;
 
-import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
 import med.voll.api.domain.ValidacaoException;
-import med.voll.api.domain.consulta.validacoes.ValidadorAgendamentoDeConsulta;
+import med.voll.api.domain.consulta.validacoes.agendamento.ValidadorAgendamentoDeConsulta;
+import med.voll.api.domain.consulta.validacoes.cancelamento.ValidadorCancelamentoDeConsulta;
 import med.voll.api.domain.medico.Medico;
 import med.voll.api.domain.medico.MedicoRepository;
 import med.voll.api.domain.paciente.PacienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -25,9 +20,11 @@ public class AgendaDeConsultas {
     @Autowired
     private PacienteRepository pacienteRepository;
     @Autowired
-    private List<ValidadorAgendamentoDeConsulta> validadores;
+    private List<ValidadorAgendamentoDeConsulta> validadoresAgendamento;
+    @Autowired
+    private List<ValidadorCancelamentoDeConsulta> validadoresCancelamento;
     public DadosDetalhamentoConsulta agendar (DadosAgendamentoConsulta dados){
-        validadores.forEach(v -> v.validar(dados));
+        validadoresAgendamento.forEach(v -> v.validar(dados));
 
         var paciente = pacienteRepository.getReferenceById(dados.idPaciente());
         var medico = escolherMedico(dados);
@@ -55,6 +52,7 @@ public class AgendaDeConsultas {
         if(!consultaRepository.existsById(dados.idConsulta())){
             throw new ValidacaoException("Id da consulta informado não existe.");
         }
+        validadoresCancelamento.forEach(v -> v.validar(dados));
 
         var consulta = consultaRepository.getReferenceById(dados.idConsulta());
         consulta.cancelar(dados.motivo());
